@@ -7,7 +7,7 @@
 {"name":"Context","group": 0,"category": "Uncategorised","subcategory": "-","wiki_link": "https://datamanagement.wiki/data_quality_management_system/context_analysis"},
 {"name":"Continual improvement","group": 2,"category": "Tactical","subcategory": "Processes","wiki_link": "https://datamanagement.wiki/data_quality_management_system/continuous_improvement"},
 {"name":"Critical data element","group": 1,"category": "Operational","subcategory": "Metadata","wiki_link": "https://datamanagement.wiki/data_quality_management_system/critical_data_element"},
-{"name":"Data architecture","group": 0,"category": "Uncategorised","subcategory": "-","wiki_link": "https://datamanagement.wiki/data_quality_management_system/data_architecture"},
+{"name":"Data architecture","group": 2,"category": "Tactical","subcategory": "Processes","wiki_link": "https://datamanagement.wiki/data_quality_management_system/data_architecture"},
 {"name":"Data cleansing","group": 1,"category": "Operational","subcategory": "Data quality improvement","wiki_link": "https://datamanagement.wiki/data_quality_management_system/data_cleansing"},
 {"name":"Data lineage","group": 1,"category": "Operational","subcategory": "Metadata","wiki_link": "https://datamanagement.wiki/data_quality_management_system/data_lineage"},
 {"name":"Data process","group": 2,"category": "Tactical","subcategory": "Processes","wiki_link": "https://datamanagement.wiki/data_quality_management_system/data_process"},
