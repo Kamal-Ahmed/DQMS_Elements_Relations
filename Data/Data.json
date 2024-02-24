@@ -1482,13 +1482,7 @@
 			"target": "Data supplier",
 			"value": 1,
 			"property": "can be input for a"
-		},
-		{
-			"source": "Data quality policy",
-			"target": "Critical data element",
-			"value": 1,
-			"property": "is input for the procedure to establish a"
-		},
+		},		
 		{
 			"source": "Data quality requirement",
 			"target": "Requirement",
