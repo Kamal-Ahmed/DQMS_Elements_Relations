@@ -1155,7 +1155,7 @@
 		},
 		{
 			"source": "Data architecture",
-			"target": "Data value management system",
+			"target": "Data utility management system",
 			"value": 1,
 			"property": "is an element of a"
 		},
