@@ -1052,6 +1052,12 @@
 			"property": "is child of"
 		},
 		{
+			"source": "Context analysis",
+			"target": "Management system",
+			"value": 1,
+			"property": "is part of"
+		},		
+		{
 			"source": "Context",
 			"target": "Management system",
 			"value": 1,
@@ -1297,6 +1303,12 @@
 			"value": 1,
 			"property": "includes"
 		},
+		{
+			"source": "Data quality analysis",
+			"target": "Data quality rule",
+			"value": 1,
+			"property": "is a way to discover"
+		},		
 		{
 			"source": "Data quality communication",
 			"target": "Communication",
