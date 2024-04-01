@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+  <head>
+   
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen, projection"/>
+
+  </head>
+  
+  <body>
+  
+  <div id="chart"></div>
+      
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
+        
+    <div class="frame_legend"><div id="main_title">Data Quality Management System: Elements and Relationships</div>
+    
+        <div id="sub_title">JSON dataset version: 0.3. Visualisation version: 0.92 (beta).</div>        
+        <div class="dot1">
+            <div class="t1">Supporting/Uncategorised element</div>
+        </div>
+    
+        <div class="dot4">
+            <div class="t4">Operational element</div>
+        </div>
+    
+        <div class="dot2">
+            <div class="t2">Tactical element</div>
+        </div>
+            
+        <div class="dot3">
+            <div class="t3">Strategic element</div>
+        </div>
+        
+        <div class="dot5">
+            <div class="t5">Objective element</div>
+        </div>
+
+        <div class="dot6">
+            <div class="t6">Management System</div>
+        </div>
+            
+    </div>
+
+    <aside>
+        <h3>Data Quality Management System (DQMS)</h3>
+        <p>The Data Quality working group of the Data Management Association in the Netherlands (DAMA NL), is developing a Data Quality Management System (DQMS)
+            using ISO 9001 as a frame of reference.
+            </p>
+        <p>
+            ISO 9001 is intended for the quality of products and services in general and is
+            rarely applied to data quality. In order to apply ISO 9001 to data quality, we need to convert the terms of elements used in ISO 9001 to
+            terms that are common in the data domain.
+        </p>
+        <p>
+            The elements in the data domain may have specific interdependencies, which are shown in the form of
+            connections between elements. The connections have properties (labels) and directionality (arrows).
+        </p>
+        <p>
+            Use the controls below to highlight elements, relationships or labels:
+        </p>
+        <div class="rdobtn_frame">
+            <input type="radio" id="rdo_btn1" name="element_sel" value="Uncategorised">
+            <label for="rdo_btn1"> Display Supporting elements </label><br>
+            <input type="radio" id="rdo_btn2" name="element_sel" value="Operational">
+            <label for="rdo_btn2"> Display Operational elements </label><br>
+            <input type="radio" id="rdo_btn3" name="element_sel" value="Tactical">
+            <label for="rdo_btn3"> Display Tactical elements </label><br>
+            <input type="radio" id="rdo_btn4" name="element_sel" value="Strategic">
+            <label for="rdo_btn4"> Display Strategic elements </label><br>
+            <input type="radio" id="rdo_btn5" name="element_sel" value="Objective">
+            <label for="rdo_btn5"> Display Objective elements </label><br>
+            <input type="radio" id="rdo_btn6" name="element_sel" value="MS">
+            <label for="rdo_btn6"> Display Management Systems </label><br>
+            <input type="radio" id="rdo_btn7" name="element_sel" value="All" checked>
+            <label for="rdo_btn7"> Display all elements</label><br>
+
+        </div>
+        <div class="chkbox_frame">
+            <input type="checkbox" id="chk_box1" name="chk_box1">
+            <label for="chk_box1"> Display all connections for directionality </label><br>
+            <input type="checkbox" id="chk_box2" name="chk_box2" disabled="disabled">
+            <label for="chk_box2"> Display all properties (labels) of all connections </label>        
+        </div>
+        <br/>
+        <h3>Sources</h3>  
+        <ul>
+            
+            <li><a rel="DAMA-NL" href="https://dama-nl.org/werkgroepen/werkgroep-datakwaliteit/" target="_blank">Website DAMA NL Working Group for Data Quality</a></li>
+            <li><a rel="DAMA-SOURCE" href="https://www.dama-nl.org/wp-content/uploads/2022/05/A-Management-System-for-Data-Quality-DAMA-NL-v2.2-EN-1.pdf" target="_blank">White paper: A Management System for Data Quality, May 2022</a></li>
+            <li><a rel="Wiki" href="https://datamanagement.wiki/start" target="_blank">DAMA NL Data Quality Management System in Wiki</li>
+            <li><a rel="DQMSIMAGE" href="https://datamanagement.wiki/_detail/data_quality_management_system/2307_metromodel_dqms.png?id=data_quality_general%3Adata_quality_management_system" target="_blank">DQMS metromodel visual</a></li>
+            
+        </ul>
+                
+        <br/>
+        <!--<p><a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank"></a>
+            <br/>-->
+        <!--
+        <p>-->
+        <!--    <a><img alt="DAMA NL logo" style="border-width:0; width:120px;height:65.5px;" src="logos/dama-logo.webp" /></a>-->
+            <!--<a><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>.-->
+        <!--</p>-->            
+    
+      </aside>
+
+<script>
+
+var width = 1100, height = 630;
+
+var margin = {top: 8, right: 10, bottom: 100, left: 0} 
+
+var w = 1100, h = 630, r = 6;
+    
+var padding = 1.5, clusterPadding = 6, maxRadius = 12, count = 0;
+
+var n, m = 20; 
+
+const color = ["#C40233","#9DC3E6", "#5B9BD5", "#1F4E79", "#FF8E1D", "#FFEB3B"];
+
+// Initialize: the network diagram is shown with all links and relationship labels hidden
+var flag_links = "off"; // Check-box for links not ticked
+var flag_labels = "off"; // Check-box for labeling not ticked
+var flag_selected_elements = "off" // No specific elements selected for viewing, so show all
+
+var force = d3.layout.force()
+    .charge(-500)
+    .linkDistance(600)
+    //.linkStrength(0.1)
+    .gravity(0.1)
+    .size([width, height]);    
+    
+
+d3.json("https://raw.githubusercontent.com/Kamal-Ahmed/DQMS_Elements_Relations.github.io/main/Data/Data.json", function (error, graph) {
+            
+            if (error) {
+                return console.warn(error);
+            }
+   
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+
+    .attr("transform",
+            "translate(" +  margin.left + "," + margin.top + ")")
+    //.attr("dx", (w / 2) - 50)
+
+    .attr("style", "outline: thin solid lightgrey;")
+    .style("background-color", "white")
+    
+    .call(
+
+    d3.behavior.zoom()
+    .scaleExtent([0.5, 4])
+    .on("zoom", zoom)
+    
+    )
+    .append("g");
+    
+var svg_status_text = d3.select("svg").append("svg")
+    .append("text")
+    .attr("dy", h /2)
+    .attr("dx", (w / 2) - 50)
+    .style("stroke", "black")
+    .style("stroke-width",0)
+    .text("Preparing visualisation ....")
+    .attr("font-family", "Arial, Helvetica, sans-serif")
+    .style("font", "14px Arial")
+    .transition(3000)
+	.duration(2000)			
+    .style("opacity", 0)
+    .style('pointer-events', 'none');
+
+var div = d3.select('body').append('div')
+    .style("position", "absolute")
+    .style("text-align", "left")
+    .style("width", "255px")
+    .style("color","black")
+    .style("background-color", "lightyellow")
+    .style("font-family", "Helvetica")
+    .style("font-size", "10.5px")
+    .style("padding-left","5px")
+    .style("padding-right","5px")
+    .style("padding-top","5px")
+    .style("padding-bottom","5px")
+    .style("opacity", 0);
+
+
+    svg.append('defs').append('marker')
+    .attr("id",'arrowhead')
+    //.attr('viewBox','-0 -5 10 10')
+    .attr('viewBox','-0 -3 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
+    .attr('refX',16) // x coordinate for the reference point of the marker. If circle is bigger, this needs to be bigger.
+    .attr('refY',0.01)
+    .attr('orient','auto')
+    .attr('markerWidth',11)
+    .attr('markerHeight',7)
+    .attr('xoverflow','visible')
+    .append('svg:path')
+    // .attr('d', 'M 0,-5 L 10 ,0 L 0,5') Original dimensions
+    .attr('d', 'M 0,-3 L 10 ,0 L 0,3 z')
+    .attr('fill', '#666')
+    .style('stroke','none');
+
+
+var linkedByIndex = {};
+ 
+var n = graph.nodes.length; //was: graph.nodes.length
+
+    // Added code to re-map node names to indexes:
+    // https://stackoverflow.com/questions/14629853/json-representation-for-d3-force-directed-networks?rq=3
+    
+    var nodeMap = {};
+    graph.nodes.forEach(function(x) { nodeMap[x.name] = x; });
+    graph.links = graph.links.map(function(x) {
+      return {
+        source: nodeMap[x.source],
+        target: nodeMap[x.target],
+        value: x.value,
+        property: x.property
+      };
+    });
+    
+    force
+            
+        .nodes(graph.nodes)
+        .links(graph.links)
+
+    // Initialize the positions deterministically, for better results.
+    graph.nodes.forEach(function(d, i) { d.x = d.y = width / n * i; });
+
+
+setTimeout(function() {
+        
+    force.start();
+    
+    for (var i = 500; i > 0; --i) force.tick();
+
+    force.stop();
+        
+    var ox = 0, oy = 0;
+    graph.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
+    ox = ox / n - width / 2, oy = oy / n - height / 2;
+    graph.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
+
+    force.start()
+          
+    var link = svg.selectAll(".link")        
+        .data(graph.links)
+        .enter()        
+        .append("line")
+        .attr("class", "link")    
+    
+    var edgepaths = svg.selectAll(".edgepath")
+        .data(graph.links)
+        .enter()
+        .append('path')
+        .attr('class', 'link')
+        .attr('fill-opacity', 0)
+        .attr('stroke-opacity', 1)                
+        .attr('id', function (d, i) {return 'edgepath' + i})
+        .on("mouseover",mouseover_edges)        
+        .attr('marker-end','url(#arrowhead)');
+
+    var linkText = svg.selectAll(".edgelabel")        
+        .data(graph.links)
+        .enter()
+        .append('text')
+        .style("pointer-events", "none")
+        .attr('class', 'edgelabel')
+        .attr('id', function (d, i) {return 'edgelabel' + i})
+        .attr("font-family", "Arial, Helvetica, sans-serif")
+        .style("font", "bold 12px Arial")
+        .attr('fill', '#aaa')
+        
+        linkText.append('textPath') //To render text along the shape of a <path>, enclose the text in a <textPath> element that has an href attribute with a reference to the <path> element.
+        .attr('xlink:href', function (d, i) {return '#edgepath' + i})        
+        .style("text-anchor", "middle")
+        .style("pointer-events", "none")
+        .attr("startOffset", "50%")
+        
+        .text(d => d.property)                
+        .style("font", "normal 12px Arial")
+        .style("text-shadow", "0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff");   
+
+    var node = svg.selectAll(".node")        
+        .data(graph.nodes)
+        .enter()
+        .append("g")
+        .attr("class", "node")
+        .on("mouseover", mouseover)        
+        .on("mouseout", mouseout)
+        .call(force.drag);
+    
+        node.append("circle")
+        //.attr("r", d=> 17)//+ d.runtime/20 )
+        .attr("r", 8)
+        .style("fill", function (d) { return color[d.group]; })
+    
+            
+    node.append("text")
+    .attr("dy", 4)
+    .attr("dx", 12)
+    .style("stroke", "black")
+    .style("stroke-width",0)
+    .text(d => d.name)
+    .style("font", "bold 12px Arial")
+    .style("text-shadow", "0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff")
+     
+         edgepaths.attr("d", function(d) {
+             
+         var dx = d.target.x - d.source.x,
+             dy = d.target.y - d.source.y,
+             dr = Math.sqrt(dx * dx + dy * dy);
+         return "M" + 
+             d.source.x + "," + 
+             d.source.y + "A" + 
+             dr + "," + dr + " 0 0,1 " + 
+             d.target.x + "," + 
+             d.target.y;
+         }); 
+
+    node.attr("transform", function (d) {return "translate(" + d.x + ", " + d.y + ")";});
+
+    linkText.attr('transform', function (d) {
+            if (d.target.x < d.source.x) {
+                var bbox = this.getBBox();
+
+                rx = bbox.x + bbox.width / 2;
+                ry = bbox.y + bbox.height / 2;
+                
+                return 'rotate(180 ' + rx + ' ' + ry + ')';
+                
+            }
+            else {
+                return 'rotate(0)';                
+            }
+                    
+        });
+
+
+graph.links.forEach(function(d) {
+            linkedByIndex[d.source.index + "," + d.target.index] = 1;
+            linkedByIndex[d.target.index + "," + d.source.index] = 1;
+        });
+
+        node.on("click", function(d) {
+    
+    //If node is dragged to a new position, the tooltip is not shown:    
+    if (d3.event.defaultPrevented) return;
+    
+    var str_link_status
+    
+    if (d.wiki_link === "-"){
+        //There is no wiki link, so insert a non-clickable link (static text) as the last entry in html table for tooltip:
+        str_link_status = "<td id=2>" + "-" + "</td>"
+        } else{
+        //There is a wiki link, so insert a clickable link as the last entry in the table for tooltip:
+            str_link_status = "<td id=2>" + "<a href=" + d.wiki_link + " target='_blank'>" + "Link" + "</a>" + "</td>"
+        }
+
+        div.transition()
+				.duration(3000)				
+                .style("opacity", 0);
+                div.transition()
+				.duration(3000)
+				.style("opacity", .9)
+                .style('pointer-events', 'visible'); //Added to make the pointer disappear when tooltip is covering another node
+
+
+        div.html(
+                    
+                    "<table>" +                    
+                    "<tr>" +
+                        "<td>" + "<strong>" + "Name: " + "</strong>" + "</td>" +
+                        "<td>" + d.name + "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                        "<td>" + "<strong>" + "Category: " + "</strong>" + "</td>" +
+                        "<td>" + d.category + "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                        "<td>" + "<strong>" + "Sub category: " + "</strong>" + "</td>" +
+                        "<td>" + d.subcategory + "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                        "<td>" + "<strong>" + "Wiki source: " + "</strong>" + "</td>" +
+                        str_link_status +
+                    "</tr>" +
+                "</table>"                    
+                    
+                    )
+
+                    .style("left", (d3.event.pageX + 20) + "px")
+                    .style("top", (d3.event.pageY - 30) + "px")                    
+                   
+
+    });
+
+
+        }, 30);
+
+
+function neighboring(a, b) {
+    return a.index == b.index || linkedByIndex[a.index + "," + b.index];
+}
+
+
+function mouseover(d) {
+
+if (flag_selected_elements === "off") {
+
+d3.select(this).select("circle").attr("r", 10).style("stroke","black").transition().duration(100)
+
+d3.select(this)
+        .select("text")
+        .attr("x", 4)
+        .style("font", "bold 16px Arial")
+        .style("text-shadow", "0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff")
+
+
+d3.selectAll(".link").style("stroke","#666").transition().duration(100)
+    .style("opacity", function(o) {
+            return o.source === d || o.target === d ? 1 : 0.1;
+    });
+    
+
+d3.selectAll("circle").transition().duration(100)
+        .style("stroke", function(o) {
+            //console.log(neighboring(d, o));
+            //return neighboring(d, o) ? "black" : "white";         
+            if (neighboring(d, o) == 1) {return "black"}
+            else {return "white"}
+        })    
+
+
+d3.selectAll(".node").transition().duration(100)
+        .style("opacity", function(o) {
+            return neighboring(d, o) ? 1 : .1;
+        })        
+     
+        if ( (flag_links === "on"  && flag_labels === "off") || (flag_links === "on"  && flag_labels === "on") ){
+
+        d3.selectAll(".edgelabel").transition().duration(100)
+        .style("opacity", function(o) {
+            return o.source === d || o.target === d ? 1 : 0;
+        })
+        
+
+        .style("fill", function(o) {
+            return o.source === d || o.target === d ? "black" : "#666";
+        });
+      
+        }
+    
+        d3.selectAll("#arrowhead")
+        .attr('viewBox','-0 -3 10 10')
+        .attr('refX',16)
+        .attr('refY',0.01)
+        .attr('orient','auto')
+        .attr('markerWidth',11)
+        .attr('markerHeight',7)
+        .attr('xoverflow','visible')
+        .append('svg:path')
+        .attr('d', 'M 0,-3 L 10 ,0 L 0,3 z')
+        .attr('fill', '#666')
+        .style('stroke','none');
+
+        //console.log(flag_labels);
+
+
+}
+
+}
+
+
+function mouseout(d) {
+    
+div.transition()
+    .delay(4000)
+    .duration(1000)
+    .style("opacity", 0)
+    .style('pointer-events', 'none') //hide mouse-pointer when moving the mouse-pointer away from node
+
+    if (flag_selected_elements === "off") {
+
+   // Change node's text font-size and circle radius back to their original sizes:   
+   d3.selectAll("circle").attr("r", 8).style("stroke", "white");
+        d3.select(this).select("text")        
+        .attr("x", 1)        
+        .style("font", "bold 12px Arial")
+        .style("text-shadow", "0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff");
+    
+    div.transition()
+    .delay(4000)
+    .duration(1000)
+    .style("opacity", 0)
+    .style('pointer-events', 'none') //hide mouse-pointer when moving the mouse-pointer away from node
+    
+
+d3.selectAll(".link").style("stroke","#666").style("stroke-width",1.5);    
+
+d3.selectAll(".link").transition().duration(100)
+  .style("opacity", 0.5);
+
+d3.selectAll(".node").transition().duration(100)
+  .style("opacity", 1);    
+
+  if ( (flag_links === "on"  && flag_labels === "on") ) { // check-box ticked, so show all labels
+    
+    d3.selectAll(".edgelabel").transition().duration(100).style("opacity", 1);
+  
+  } else {
+
+    d3.selectAll(".edgelabel").transition().duration(100).style("opacity", 0);
+
+  }
+
+d3.selectAll(".edgelabel").style("fill", "grey");
+
+
+d3.selectAll("#arrowhead")
+  .attr('viewBox','-0 -3 10 10')
+  .attr('refX',16)
+  .attr('refY',0.01)
+  .attr('orient','auto')
+  .attr('markerWidth',11)
+  .attr('markerHeight',7)
+  .attr('xoverflow','visible')
+  .append('svg:path')
+  .attr('d', 'M 0,-3 L 10 ,0 L 0,3 z')
+  .attr('fill', '#666')
+  .style('stroke','none');
+
+
+    //Added to ensure that during mouseout subsequent events are stopped
+    if (d3.event.stopPropagation) return;
+
+}
+
+
+}
+
+function mouseover_edges(d)
+{
+
+}
+
+function zoom() {
+
+svg.attr("transform", "translate("
+
++ d3.event.translate
+
++ ")scale(" + d3.event.scale + ")");
+
+}
+
+
+function update_labels(){
+
+    // For each check box:
+    d3.select("#chk_box2").each(function(o){
+  
+    cb_labels = d3.select(this);
+    grp_labels = cb_labels.property("value")
+
+    // If the box is checked, show labels:
+        if(cb_labels.property("checked")){
+        
+            flag_labels = "on";
+
+            d3.selectAll(".edgelabel").style("opacity", 1)            
+        
+        // Check-box de-selected, so hide labels:
+        }
+        else{
+    
+        flag_labels = "off"
+
+        d3.selectAll(".edgelabel").style("opacity", 0)
+        
+        }
+
+return flag_labels;
+  
+})
+
+
+}
+
+
+function update_links(){
+
+// For each check box:
+d3.select("#chk_box1").each(function(o){
+
+cb_links = d3.select(this);
+grp_links = cb_links.property("value")
+
+// If the box is checked, show labels:
+    if(cb_links.property("checked")){
+    
+        flag_links = "on";
+
+        d3.selectAll(".link").style("display","inline")
+
+        // Enable check-box 2 if it was disabled:
+        d3.select("#chk_box2").attr("disabled", null)
+        
+    // Check-box de-selected, so hide links:
+    }
+    else{
+
+    flag_links = "off"
+    
+    d3.selectAll(".link").style("display","none")
+
+    // Disable check-box 2 if links are disabled:
+    d3.select("#chk_box2").attr("disabled", true)
+    //d3.select("#chk_box2").attr("property", "unchecked")
+    d3.select('#chk_box2').property('checked',false);
+    d3.selectAll(".edgelabel").style("opacity", 0)
+
+    update_labels()
+
+    }
+
+return flag_links;
+
+})
+
+
+}
+
+
+const buttons = d3.selectAll('input');
+        buttons.on('change', function(d) {
+        //console.log('button changed to ' + this.value);
+
+            if (this.value === "Uncategorised"){
+
+                d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
+                    if (d.category != "Uncategorised"){
+                        return 0.1
+                }
+                
+                })
+                
+                flag_links = "off"
+                flag_labels = "off"
+                flag_selected_elements = "on"
+
+                d3.select('#chk_box1').property('checked',false);
+                d3.select("#chk_box1").attr("disabled", true)
+                d3.select('#chk_box2').property('checked',false);
+                d3.select("#chk_box2").attr("disabled", true)
+                update_links()
+                update_labels()
+                
+                d3.select(".dot1").transition().duration(500).style("opacity", 1)
+                d3.select(".dot4").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot2").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot3").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot5").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot6").transition().duration(500).style("opacity", 0.1)
+
+            }
+
+            if (this.value === "Operational"){
+
+                d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
+                    if (d.category != "Operational"){
+                        return 0.1
+                }
+                })
+
+                flag_links = "off"
+                flag_labels = "off"
+                flag_selected_elements = "on"
+
+                d3.select('#chk_box1').property('checked',false);
+                d3.select("#chk_box1").attr("disabled", true)
+                d3.select('#chk_box2').property('checked',false);
+                d3.select("#chk_box2").attr("disabled", true)
+                update_links()
+                update_labels()
+
+                d3.select(".dot1").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot4").transition().duration(500).style("opacity", 1)
+                d3.select(".dot2").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot3").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot5").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot6").transition().duration(500).style("opacity", 0.1)
+
+            }
+
+            if (this.value === "Tactical"){
+
+                d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
+                    if (d.category != "Tactical"){
+                        return 0.1
+                }
+                })
+
+                flag_links = "off"
+                flag_labels = "off"
+                flag_selected_elements = "on"
+
+                d3.select('#chk_box1').property('checked',false);
+                d3.select("#chk_box1").attr("disabled", true)
+                d3.select('#chk_box2').property('checked',false);
+                d3.select("#chk_box2").attr("disabled", true)
+                update_links()
+                update_labels()
+
+                d3.select(".dot1").transition().duration(400).style("opacity", 0.1)
+                d3.select(".dot4").transition().duration(400).style("opacity", 0.1)
+                d3.select(".dot2").transition().duration(400).style("opacity", 1)
+                d3.select(".dot3").transition().duration(400).style("opacity", 0.1)
+                d3.select(".dot5").transition().duration(400).style("opacity", 0.1)
+                d3.select(".dot6").transition().duration(400).style("opacity", 0.1)
+
+            }
+
+
+            if (this.value === "Strategic"){
+
+                d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
+                    if (d.category != "Strategic"){
+                        return 0.1
+                }
+                })
+
+                flag_links = "off"
+                flag_labels = "off"
+                flag_selected_elements = "on"
+
+                d3.select('#chk_box1').property('checked',false);
+                d3.select("#chk_box1").attr("disabled", true)
+                d3.select('#chk_box2').property('checked',false);
+                d3.select("#chk_box2").attr("disabled", true)
+                update_links()
+                update_labels()
+
+                d3.select(".dot1").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot4").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot2").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot3").transition().duration(300).style("opacity", 1)
+                d3.select(".dot5").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot6").transition().duration(300).style("opacity", 0.1)
+
+            }
+
+            if (this.value === "Objective"){
+
+                d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
+                    if (d.category != "Objective"){
+                        return 0.1
+                    }
+                })
+
+                flag_links = "off"
+                flag_labels = "off"
+                flag_selected_elements = "on"
+
+                d3.select('#chk_box1').property('checked',false);
+                d3.select("#chk_box1").attr("disabled", true)
+                d3.select('#chk_box2').property('checked',false);
+                d3.select("#chk_box2").attr("disabled", true)
+                update_links()
+                update_labels()
+
+                d3.select(".dot1").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot4").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot2").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot3").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot5").transition().duration(300).style("opacity", 1)
+                d3.select(".dot6").transition().duration(300).style("opacity", 0.1)
+
+            }
+
+            if (this.value === "MS"){
+
+                d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
+                    if ((d.category != "DU MS") && (d.category != "DQ MS") && (d.category != "DMS") && (d.category != "DS MS")){
+                        return 0.1
+                    }                    
+
+                })
+
+                flag_links = "off"
+                flag_labels = "off"
+                flag_selected_elements = "on"
+
+                d3.select('#chk_box1').property('checked',false);
+                d3.select("#chk_box1").attr("disabled", true)
+                d3.select('#chk_box2').property('checked',false);
+                d3.select("#chk_box2").attr("disabled", true)
+                update_links()
+                update_labels()
+
+                d3.select(".dot1").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot4").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot2").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot3").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot5").transition().duration(500).style("opacity", 0.1)
+                d3.select(".dot6").transition().duration(500).style("opacity", 1)
+
+            }
+
+            if (this.value === "All"){
+
+                d3.selectAll(".node").transition().duration(300).style("opacity", 1)
+
+                //flag_links = "on"
+                //flag_labels = "on"
+                d3.select("#chk_box1").attr("disabled", null)
+                d3.select("#chk_box2").attr("disabled", true)          
+                flag_selected_elements = "off"
+                update_links()
+                update_labels()
+
+                d3.select(".dot1").transition().duration(500).style("opacity", 1)
+                d3.select(".dot4").transition().duration(500).style("opacity", 1)
+                d3.select(".dot2").transition().duration(500).style("opacity", 1)
+                d3.select(".dot3").transition().duration(500).style("opacity", 1)
+                d3.select(".dot5").transition().duration(500).style("opacity", 1)
+                d3.select(".dot6").transition().duration(500).style("opacity", 1)
+
+            }
+
+        return flag_selected_elements
+
+        })    
+
+
+// When a button change occurs, run the update functions for the links and labels:
+d3.select("#chk_box1").on("change",update_links);
+d3.select("#chk_box2").on("change",update_labels);
+
+});
+
+</script>
+
+</body>
+    
+</html>
