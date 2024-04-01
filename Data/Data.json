@@ -1050,13 +1050,7 @@
 			"target": "Analysis",
 			"value": 1,
 			"property": "is child of"
-		},
-		{
-			"source": "Context analysis",
-			"target": "Management system",
-			"value": 1,
-			"property": "is part of"
-		},		
+		},				
 		{
 			"source": "Context",
 			"target": "Management system",
@@ -1619,7 +1613,7 @@
 			"source": "Data quality rule",
 			"target": "Application",
 			"value": 1,
-			"property": "can be integreted in an"
+			"property": "can be integrated in an"
 		},
 		{
 			"source": "Data quality rule",
