@@ -137,7 +137,7 @@
 {"name":"Validity","group":0,"wiki_link":"https://datamanagement.wiki/data_quality_dimension/validity"},
 {"name":"Valuability","group":0,"wiki_link":"https://datamanagement.wiki/data_quality_dimension/valuability"},
 {"name":"Variety","group":0,"wiki_link":"https://datamanagement.wiki/data_quality_dimension/variety"},
-{"name":"Volatility","group":0,"wiki_link":"https://datamanagement.wiki/data_quality_dimension/volatility"}
+{"name":"Volatility","group":0,"wiki_link":"https://datamanagement.wiki/data_quality_dimension/volatility"},
 {"name":"Data security management system","group":5,"wiki_link":"https://datamanagement.wiki/data_security_management_system/data_security_management_system"}
 ],
 "links":
