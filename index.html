@@ -14,7 +14,7 @@
         
     <div class="frame_legend"><div id="main_title">Data Quality Management System: Elements and Relationships</div>
     
-        <div id="sub_title">JSON dataset version: 0.3. Visualisation version: 0.92 (beta).</div>        
+        <div id="sub_title">JSON dataset version: 0.4. Visualisation version: 0.93 (beta).</div>        
         <div class="dot1">
             <div class="t1">Supporting/Uncategorised element</div>
         </div>
@@ -42,8 +42,9 @@
     </div>
 
     <aside>
+        <a><img alt="DAMA NL logo" style="border-width:0; width:60px;height:32.75px;" src="logos/dama-logo.webp" /></a>
         <h3>Data Quality Management System (DQMS)</h3>
-        <p>The Data Quality working group of the Data Management Association in the Netherlands (DAMA NL), is developing a Data Quality Management System (DQMS)
+        <p>The Data Quality working group of the Data Management Association in the Netherlands (DAMA NL), has been developing a Data Quality Management System (DQMS)
             using ISO 9001 as a frame of reference.
             </p>
         <p>
@@ -56,7 +57,7 @@
             connections between elements. The connections have properties (labels) and directionality (arrows).
         </p>
         <p>
-            Use the controls below to highlight elements, relationships or labels:
+            Use the set of controls below to discover elements and their relationships with other elements:
         </p>
         <div class="rdobtn_frame">
             <input type="radio" id="rdo_btn1" name="element_sel" value="Uncategorised">
@@ -86,9 +87,9 @@
         <ul>
             
             <li><a rel="DAMA-NL" href="https://dama-nl.org/werkgroepen/werkgroep-datakwaliteit/" target="_blank">Website DAMA NL Working Group for Data Quality</a></li>
-            <li><a rel="DAMA-SOURCE" href="https://www.dama-nl.org/wp-content/uploads/2022/05/A-Management-System-for-Data-Quality-DAMA-NL-v2.2-EN-1.pdf" target="_blank">White paper: A Management System for Data Quality, May 2022</a></li>
+            <li><a rel="DAMA-SOURCE" href="https://www.dama-nl.org/wp-content/uploads/2022/05/A-Management-System-for-Data-Quality-DAMA-NL-v2.2-EN-1.pdf" target="_blank">White paper: A Management System for Data Quality</a></li>
             <li><a rel="Wiki" href="https://datamanagement.wiki/start" target="_blank">DAMA NL Data Quality Management System in Wiki</li>
-            <li><a rel="DQMSIMAGE" href="https://datamanagement.wiki/_detail/data_quality_management_system/2307_metromodel_dqms.png?id=data_quality_general%3Adata_quality_management_system" target="_blank">DQMS metromodel visual</a></li>
+            <li><a rel="DQMSIMAGE" href="https://datamanagement.wiki/_detail/data_quality_general/2406726_dqms_metromodel.jpg?id=data_quality_general%3Adata_quality_management_system" target="_blank">DQMS metromodel visual</a></li>
             
         </ul>
                 
@@ -97,7 +98,7 @@
             <br/>-->
         <!--
         <p>-->
-        <!--    <a><img alt="DAMA NL logo" style="border-width:0; width:120px;height:65.5px;" src="logos/dama-logo.webp" /></a>-->
+        <!--<a><img alt="DAMA NL logo" style="border-width:0; width:60px;height:32.75px;" src="logos/dama-logo.webp" /></a>-->
             <!--<a><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>.-->
         <!--</p>-->            
     
@@ -124,9 +125,9 @@ var flag_selected_elements = "off" // No specific elements selected for viewing,
 
 var force = d3.layout.force()
     .charge(-500)
-    .linkDistance(600)
+    .linkDistance(300)
     //.linkStrength(0.1)
-    .gravity(0.1)
+    .gravity(0.2)
     .size([width, height]);    
     
 
@@ -146,7 +147,30 @@ var svg = d3.select("body").append("svg")
 
     .attr("style", "outline: thin solid lightgrey;")
     .style("background-color", "white")
+         
+    //---------------------------------------------------------------------
+
+    //https://jsfiddle.net/fF4L4/43/
+
+    .append("svg:g")
+    .attr("class","drawarea")
+    .append("svg:g")
+    //.attr("transform", "translate(" + m[3] + "," + m[0] + ")" );
+    .attr('transform', 'translate(' + [225, 150] + ') scale(' + 0.5 + ')')
+
+    //---------------------------------------------------------------------
+
+    d3.select("svg")
+        .call(d3.behavior.zoom()
+              .scaleExtent([0.5, 5])
+              .on("zoom", zoom))
+
+              .on("dblclick.zoom", null)
     
+    
+        
+    //-----------------------------
+    /*
     .call(
 
     d3.behavior.zoom()
@@ -154,8 +178,22 @@ var svg = d3.select("body").append("svg")
     .on("zoom", zoom)
     
     )
+    .on("dblclick.zoom", null) // disables zoom upon double-click
+    //.on("wheel.zoom", null)
     .append("g");
+    */
+    //-----------------------------
     
+    // Moving svg to center of canvas and setting the zooming factor to 0.6
+    /// --> svg.attr('transform', 'translate(' + [200, 120] + ') scale(' + 0.6 + ')')
+
+    //https://stackoverflow.com/questions/8681607/how-do-i-specify-the-initial-zoom-level-in-d3
+
+    //--->see: https://codepen.io/msolomon/pen/PJOVeE <----
+     
+
+    //------------------------------------------------
+
 var svg_status_text = d3.select("svg").append("svg")
     .append("text")
     .attr("dy", h /2)
@@ -173,15 +211,15 @@ var svg_status_text = d3.select("svg").append("svg")
 var div = d3.select('body').append('div')
     .style("position", "absolute")
     .style("text-align", "left")
-    .style("width", "255px")
+    .style("width", "110px")
     .style("color","black")
     .style("background-color", "lightyellow")
     .style("font-family", "Helvetica")
-    .style("font-size", "10.5px")
-    .style("padding-left","5px")
-    .style("padding-right","5px")
-    .style("padding-top","5px")
-    .style("padding-bottom","5px")
+    .style("font-size", "11px")
+    .style("padding-left","3px")
+    .style("padding-right","3px")
+    .style("padding-top","2px")
+    .style("padding-bottom","2px")
     .style("opacity", 0);
 
 
@@ -289,6 +327,7 @@ setTimeout(function() {
         .attr("class", "node")
         .on("mouseover", mouseover)        
         .on("mouseout", mouseout)
+        .on("contextmenu", context_menu)
         .call(force.drag);
     
         node.append("circle")
@@ -343,12 +382,34 @@ graph.links.forEach(function(d) {
             linkedByIndex[d.target.index + "," + d.source.index] = 1;
         });
 
+        
         node.on("click", function(d) {
     
     //If node is dragged to a new position, the tooltip is not shown:    
     if (d3.event.defaultPrevented) return;
     
     var str_link_status
+
+    var mouse_x, mouse_y
+
+    mouse_x = d3.event.pageX
+    mouse_y = d3.event.pageY
+
+    if (mouse_x + 110 > 1480){
+
+        mouse_x = mouse_x - 120
+
+    }
+
+    if (mouse_y - 15 < 115){
+
+        mouse_y = mouse_y + 10
+
+    } else {
+
+        mouse_y = mouse_y - 30
+
+    }
     
     if (d.wiki_link === "-"){
         //There is no wiki link, so insert a non-clickable link (static text) as the last entry in html table for tooltip:
@@ -364,24 +425,12 @@ graph.links.forEach(function(d) {
                 div.transition()
 				.duration(3000)
 				.style("opacity", .9)
-                .style('pointer-events', 'visible'); //Added to make the pointer disappear when tooltip is covering another node
+                .style('pointer-events', 'visible');
 
 
         div.html(
                     
-                    "<table>" +                    
-                    "<tr>" +
-                        "<td>" + "<strong>" + "Name: " + "</strong>" + "</td>" +
-                        "<td>" + d.name + "</td>" +
-                    "</tr>" +
-                    "<tr>" +
-                        "<td>" + "<strong>" + "Category: " + "</strong>" + "</td>" +
-                        "<td>" + d.category + "</td>" +
-                    "</tr>" +
-                    "<tr>" +
-                        "<td>" + "<strong>" + "Sub category: " + "</strong>" + "</td>" +
-                        "<td>" + d.subcategory + "</td>" +
-                    "</tr>" +
+                "<table>" +         
                     "<tr>" +
                         "<td>" + "<strong>" + "Wiki source: " + "</strong>" + "</td>" +
                         str_link_status +
@@ -390,9 +439,10 @@ graph.links.forEach(function(d) {
                     
                     )
 
-                    .style("left", (d3.event.pageX + 20) + "px")
-                    .style("top", (d3.event.pageY - 30) + "px")                    
-                   
+                    .style("left", (mouse_x + 0) + "px")
+                    .style("top", (mouse_y) + "px")                    
+         
+                    //console.log(d3.event.pageX, d3.event.pageY)
 
     });
 
@@ -473,6 +523,17 @@ d3.selectAll(".node").transition().duration(100)
 }
 
 
+function context_menu(d,i) {
+
+d3.event.preventDefault();
+// Add menu items here per action
+console.log("context menu used")
+
+// https://dev.to/gilfink/adding-a-context-menu-to-d3-force-graph-4f5f
+
+}
+
+
 function mouseout(d) {
     
 div.transition()
@@ -545,15 +606,36 @@ function mouseover_edges(d)
 
 }
 
+/*--------------------------------------------------------------------------
 function zoom() {
 
-svg.attr("transform", "translate("
+    svg.attr("transform", "translate("
 
-+ d3.event.translate
+    + (d3.event.translate[0] + 200) + "," + (d3.event.translate[1] + 120)
 
-+ ")scale(" + d3.event.scale + ")");
+    + ")scale(" + d3.event.scale * 0.6 + ")");
 
 }
+-----------------------------------------------------------------------------*/
+
+function zoom()
+{
+    var scale = d3.event.scale,
+        translation = d3.event.translate
+    d3.select(".drawarea")
+        .attr("transform", "translate(" + translation + ")" +
+              " scale(" + scale + ")");
+}
+
+
+/*------------------------
+
+svg.attr("transform", "translate("
++ (d3.event.translate[0] + 200) + "," + (d3.event.translate[1] + 120) + ")");
+
+d3.event.scale
+
+--------------------------*/
 
 
 function update_labels(){
@@ -640,7 +722,7 @@ const buttons = d3.selectAll('input');
             if (this.value === "Uncategorised"){
 
                 d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
-                    if (d.category != "Uncategorised"){
+                    if (d.group != 0){
                         return 0.1
                 }
                 
@@ -650,26 +732,27 @@ const buttons = d3.selectAll('input');
                 flag_labels = "off"
                 flag_selected_elements = "on"
 
+                d3.select(".dot1").transition().duration(300).style("opacity", 1)
+                d3.select(".dot4").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot2").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot3").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot5").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot6").transition().duration(300).style("opacity", 0.1)
+
                 d3.select('#chk_box1').property('checked',false);
                 d3.select("#chk_box1").attr("disabled", true)
                 d3.select('#chk_box2').property('checked',false);
                 d3.select("#chk_box2").attr("disabled", true)
+
                 update_links()
                 update_labels()
                 
-                d3.select(".dot1").transition().duration(500).style("opacity", 1)
-                d3.select(".dot4").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot2").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot3").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot5").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot6").transition().duration(500).style("opacity", 0.1)
-
             }
 
             if (this.value === "Operational"){
 
                 d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
-                    if (d.category != "Operational"){
+                    if (d.group != 1){
                         return 0.1
                 }
                 })
@@ -678,26 +761,27 @@ const buttons = d3.selectAll('input');
                 flag_labels = "off"
                 flag_selected_elements = "on"
 
+                d3.select(".dot1").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot4").transition().duration(300).style("opacity", 1)
+                d3.select(".dot2").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot3").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot5").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot6").transition().duration(300).style("opacity", 0.1)
+
                 d3.select('#chk_box1').property('checked',false);
                 d3.select("#chk_box1").attr("disabled", true)
                 d3.select('#chk_box2').property('checked',false);
                 d3.select("#chk_box2").attr("disabled", true)
-                update_links()
-                update_labels()
 
-                d3.select(".dot1").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot4").transition().duration(500).style("opacity", 1)
-                d3.select(".dot2").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot3").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot5").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot6").transition().duration(500).style("opacity", 0.1)
+                update_links()
+                update_labels()               
 
             }
 
             if (this.value === "Tactical"){
 
                 d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
-                    if (d.category != "Tactical"){
+                    if (d.group != 2){
                         return 0.1
                 }
                 })
@@ -706,19 +790,22 @@ const buttons = d3.selectAll('input');
                 flag_labels = "off"
                 flag_selected_elements = "on"
 
+                d3.select(".dot1").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot4").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot2").transition().duration(300).style("opacity", 1)
+                d3.select(".dot3").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot5").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot6").transition().duration(300).style("opacity", 0.1)
+
                 d3.select('#chk_box1').property('checked',false);
                 d3.select("#chk_box1").attr("disabled", true)
                 d3.select('#chk_box2').property('checked',false);
                 d3.select("#chk_box2").attr("disabled", true)
+
                 update_links()
                 update_labels()
 
-                d3.select(".dot1").transition().duration(400).style("opacity", 0.1)
-                d3.select(".dot4").transition().duration(400).style("opacity", 0.1)
-                d3.select(".dot2").transition().duration(400).style("opacity", 1)
-                d3.select(".dot3").transition().duration(400).style("opacity", 0.1)
-                d3.select(".dot5").transition().duration(400).style("opacity", 0.1)
-                d3.select(".dot6").transition().duration(400).style("opacity", 0.1)
+                
 
             }
 
@@ -726,7 +813,7 @@ const buttons = d3.selectAll('input');
             if (this.value === "Strategic"){
 
                 d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
-                    if (d.category != "Strategic"){
+                    if (d.group != 3){
                         return 0.1
                 }
                 })
@@ -734,13 +821,6 @@ const buttons = d3.selectAll('input');
                 flag_links = "off"
                 flag_labels = "off"
                 flag_selected_elements = "on"
-
-                d3.select('#chk_box1').property('checked',false);
-                d3.select("#chk_box1").attr("disabled", true)
-                d3.select('#chk_box2').property('checked',false);
-                d3.select("#chk_box2").attr("disabled", true)
-                update_links()
-                update_labels()
 
                 d3.select(".dot1").transition().duration(300).style("opacity", 0.1)
                 d3.select(".dot4").transition().duration(300).style("opacity", 0.1)
@@ -749,12 +829,20 @@ const buttons = d3.selectAll('input');
                 d3.select(".dot5").transition().duration(300).style("opacity", 0.1)
                 d3.select(".dot6").transition().duration(300).style("opacity", 0.1)
 
+                d3.select('#chk_box1').property('checked',false);
+                d3.select("#chk_box1").attr("disabled", true)
+                d3.select('#chk_box2').property('checked',false);
+                d3.select("#chk_box2").attr("disabled", true)
+
+                update_links()
+                update_labels()                
+
             }
 
             if (this.value === "Objective"){
 
                 d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
-                    if (d.category != "Objective"){
+                    if (d.group != 4){
                         return 0.1
                     }
                 })
@@ -763,13 +851,6 @@ const buttons = d3.selectAll('input');
                 flag_labels = "off"
                 flag_selected_elements = "on"
 
-                d3.select('#chk_box1').property('checked',false);
-                d3.select("#chk_box1").attr("disabled", true)
-                d3.select('#chk_box2').property('checked',false);
-                d3.select("#chk_box2").attr("disabled", true)
-                update_links()
-                update_labels()
-
                 d3.select(".dot1").transition().duration(300).style("opacity", 0.1)
                 d3.select(".dot4").transition().duration(300).style("opacity", 0.1)
                 d3.select(".dot2").transition().duration(300).style("opacity", 0.1)
@@ -777,12 +858,20 @@ const buttons = d3.selectAll('input');
                 d3.select(".dot5").transition().duration(300).style("opacity", 1)
                 d3.select(".dot6").transition().duration(300).style("opacity", 0.1)
 
+                d3.select('#chk_box1').property('checked',false);
+                d3.select("#chk_box1").attr("disabled", true)
+                d3.select('#chk_box2').property('checked',false);
+                d3.select("#chk_box2").attr("disabled", true)
+
+                update_links()
+                update_labels()                
+
             }
 
             if (this.value === "MS"){
 
                 d3.selectAll(".node").transition().duration(300).style("opacity", function(d) {
-                    if ((d.category != "DU MS") && (d.category != "DQ MS") && (d.category != "DMS") && (d.category != "DS MS")){
+                    if (d.group != 5){
                         return 0.1
                     }                    
 
@@ -792,19 +881,20 @@ const buttons = d3.selectAll('input');
                 flag_labels = "off"
                 flag_selected_elements = "on"
 
+                d3.select(".dot1").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot4").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot2").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot3").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot5").transition().duration(300).style("opacity", 0.1)
+                d3.select(".dot6").transition().duration(300).style("opacity", 1)
+
                 d3.select('#chk_box1').property('checked',false);
                 d3.select("#chk_box1").attr("disabled", true)
                 d3.select('#chk_box2').property('checked',false);
                 d3.select("#chk_box2").attr("disabled", true)
-                update_links()
-                update_labels()
 
-                d3.select(".dot1").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot4").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot2").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot3").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot5").transition().duration(500).style("opacity", 0.1)
-                d3.select(".dot6").transition().duration(500).style("opacity", 1)
+                update_links()
+                update_labels()                
 
             }
 
@@ -814,18 +904,20 @@ const buttons = d3.selectAll('input');
 
                 //flag_links = "on"
                 //flag_labels = "on"
+
+                d3.select(".dot1").transition().duration(300).style("opacity", 1)
+                d3.select(".dot4").transition().duration(300).style("opacity", 1)
+                d3.select(".dot2").transition().duration(300).style("opacity", 1)
+                d3.select(".dot3").transition().duration(300).style("opacity", 1)
+                d3.select(".dot5").transition().duration(300).style("opacity", 1)
+                d3.select(".dot6").transition().duration(300).style("opacity", 1)
+
                 d3.select("#chk_box1").attr("disabled", null)
                 d3.select("#chk_box2").attr("disabled", true)          
                 flag_selected_elements = "off"
-                update_links()
-                update_labels()
 
-                d3.select(".dot1").transition().duration(500).style("opacity", 1)
-                d3.select(".dot4").transition().duration(500).style("opacity", 1)
-                d3.select(".dot2").transition().duration(500).style("opacity", 1)
-                d3.select(".dot3").transition().duration(500).style("opacity", 1)
-                d3.select(".dot5").transition().duration(500).style("opacity", 1)
-                d3.select(".dot6").transition().duration(500).style("opacity", 1)
+                update_links()
+                update_labels()                
 
             }
 
