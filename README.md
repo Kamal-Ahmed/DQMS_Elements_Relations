@@ -10,6 +10,9 @@ connections between elements. The connections have properties (labels) and direc
 
 The set of controls can be used to discover elements and their relationships with other elements.
 
+# Visualisation
+![The DQMS visualisation](https://github.com/Kamal-Ahmed/DQMS_Elements_Relations.github.io/blob/main/Screenshot_GUI_DQMS.png)
+
 # Sources
 1. [Website DAMA NL Working Group for Data Quality](https://dama-nl.org/werkgroepen/werkgroep-datakwaliteit/)
 2. [White paper: A Management System for Data Quality](https://www.dama-nl.org/wp-content/uploads/2022/05/A-Management-System-for-Data-Quality-DAMA-NL-v2.2-EN-1.pdf)
