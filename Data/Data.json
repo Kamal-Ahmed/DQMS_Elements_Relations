@@ -5,7 +5,7 @@
 {"name":"Competence of staff","group":2,"wiki_link":"https://datamanagement.wiki/data_quality_management_system/competence_of_staff"},
 {"name":"Compliance","group":3,"wiki_link":"https://datamanagement.wiki/data_quality_management_system/compliance"},
 {"name":"Context","group":2,"wiki_link":"https://datamanagement.wiki/data_quality_management_system/context"},
-{"name":"Continual improvement","group":2,"wiki_link":"https://datamanagement.wiki/data_quality_management_system/continual_improvement"},
+{"name":"Continual improvement","group":0,"wiki_link":"https://datamanagement.wiki/data_concept/continual_improvement"},
 {"name":"Critical data element","group":1,"wiki_link":"https://datamanagement.wiki/data_quality_management_system/critical_data_element"},
 {"name":"Data cleansing","group":1,"wiki_link":"https://datamanagement.wiki/data_quality_management_system/data_cleansing"},
 {"name":"Data lineage","group":1,"wiki_link":"https://datamanagement.wiki/data_quality_management_system/data_lineage"},
@@ -91,7 +91,7 @@
 {"name":"Operational metadata","group":0,"wiki_link":"https://datamanagement.wiki/data_concept/operational_metadata"},
 {"name":"Data dictionary","group":0,"wiki_link":"https://datamanagement.wiki/data_concept/data_dictionary"},
 {"name":"Data element specification","group":0,"wiki_link":"https://datamanagement.wiki/data_concept/data_element_specification"},
-{"name":"Data model","group":2,"wiki_link":"https://datamanagement.wiki/data_concept/data_model"},
+{"name":"Data model","group":2,"wiki_link":"https://datamanagement.wiki/data_quality_management_system/data_model"},
 {"name":"Format","group":0,"wiki_link":"https://datamanagement.wiki/data_concept/format"},
 {"name":"Unit","group":0,"wiki_link":"https://datamanagement.wiki/data_concept/unit"},
 {"name":"Data quality team","group":0,"wiki_link":"-"},
@@ -143,7 +143,6 @@
 {"name":"Data modeling","group":0,"wiki_link":"https://datamanagement.wiki/data_management/data_modeling"},
 {"name":"Business glossary","group":0,"wiki_link":"https://datamanagement.wiki/data_concept/business_glossary"},
 {"name":"Scope","group":3,"wiki_link":"https://datamanagement.wiki/data_quality_management_system/scope"}
-
 ],
 "links":
 [
@@ -389,6 +388,5 @@
 {"source": "Scope","target": "Data management system","value": 1,"property": "is an element of a"},
 {"source": "Scope","target": "Data utilization management system","value": 1,"property": "is an element of a"},
 {"source": "Scope","target": "Data quality management system","value": 1,"property": "is an element of a"}
-
 ]
 }
