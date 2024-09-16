@@ -14,7 +14,7 @@
         
     <div class="frame_legend"><div id="main_title">Data Quality Management System: Elements and Relationships</div>
     
-        <div id="sub_title">JSON dataset version: 0.4. Visualisation version: 0.93 (beta).</div>        
+        <div id="sub_title">JSON dataset version: 0.5. Visualisation version: 1.0.</div>     
         <div class="dot1">
             <div class="t1">Supporting/Uncategorised element</div>
         </div>
@@ -89,7 +89,7 @@
             <li><a rel="DAMA-NL" href="https://dama-nl.org/werkgroepen/werkgroep-datakwaliteit/" target="_blank">Website DAMA NL Working Group for Data Quality</a></li>
             <li><a rel="DAMA-SOURCE" href="https://www.dama-nl.org/wp-content/uploads/2022/05/A-Management-System-for-Data-Quality-DAMA-NL-v2.2-EN-1.pdf" target="_blank">White paper: A Management System for Data Quality</a></li>
             <li><a rel="Wiki" href="https://datamanagement.wiki/start" target="_blank">DAMA NL Data Quality Management System in Wiki</li>
-            <li><a rel="DQMSIMAGE" href="https://datamanagement.wiki/_detail/data_quality_general/2406726_dqms_metromodel.jpg?id=data_quality_general%3Adata_quality_management_system" target="_blank">DQMS metromodel visual</a></li>
+            <li><a rel="DQMSIMAGE" href="https://datamanagement.wiki/_detail/data_quality_general/metromodel_v9-en.jpg?id=data_quality_general%3Adata_quality_management_system" target="_blank">DQMS metromodel visual</a></li>
             
         </ul>
                 
@@ -127,7 +127,7 @@ var force = d3.layout.force()
     .charge(-500)
     .linkDistance(300)
     //.linkStrength(0.1)
-    .gravity(0.2)
+    .gravity(0.1) //was: 0.2
     .size([width, height]);    
     
 
@@ -136,7 +136,8 @@ d3.json("https://raw.githubusercontent.com/Kamal-Ahmed/DQMS_Elements_Relations.g
             if (error) {
                 return console.warn(error);
             }
-   
+
+
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -460,6 +461,8 @@ function mouseover(d) {
 if (flag_selected_elements === "off") {
 
 d3.select(this).select("circle").attr("r", 10).style("stroke","black").transition().duration(100)
+
+//var node_name_filter = "Policy"
 
 d3.select(this)
         .select("text")
@@ -931,6 +934,7 @@ d3.select("#chk_box1").on("change",update_links);
 d3.select("#chk_box2").on("change",update_labels);
 
 });
+
 
 </script>
 
